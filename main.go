@@ -29,7 +29,7 @@ const goAPIURL = "https://kutego-api-xxxxx-ew.a.run.app"
 func main() {
 
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + "OTY2NDg4MjQzODk1OTQ3MjY0.YmCeUQ.DAqTbq4ZL6Nt8_Spu-7EqlWp9eM")
+	dg, err := discordgo.New("Bot " + "")
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
 		return

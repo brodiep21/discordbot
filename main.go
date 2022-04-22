@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -21,15 +21,15 @@ var (
 
 const goAPIURL = "https://kutego-api-xxxxx-ew.a.run.app"
 
-func init() {
-	flag.StringVar(&Token, "t", "", "Bot Token")
-	flag.Parse()
-}
+// func init() {
+// 	flag.StringVar(&Token, "t", "", "Bot Token")
+// 	flag.Parse()
+// }
 
 func main() {
 
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + Token)
+	dg, err := discordgo.New("Bot " + "OTY2NDg4MjQzODk1OTQ3MjY0.YmCeUQ.DAqTbq4ZL6Nt8_Spu-7EqlWp9eM")
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
 		return
@@ -49,9 +49,9 @@ func main() {
 	}
 
 	// Wait here until CTRL-C or other term signal is received.
-	fmt.Println("Bot is now running. Press CTRL-C to exit.")
+	fmt.Println("Bot is now running.")
 	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, syscall.SIGTERM)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
 	// Cleanly close down the Discord session.
@@ -60,6 +60,10 @@ func main() {
 
 type Gopher struct {
 	Name string `json:"name"`
+}
+
+type Nasa struct {
+	URL string `json:"URL"`
 }
 
 // This function will be called (due to AddHandler above) every time a new
@@ -146,6 +150,53 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		} else {
 			fmt.Println("Error: Can't get list of Gophers! :-(")
+		}
+	}
+	if m.Content == "!speak gopher" {
+		_, err := s.ChannelMessageSend(m.ChannelID, "Gopher reporting for duty!")
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		pic, err := os.Open("gopher.jpg")
+		if err != nil {
+			fmt.Println("Cannot open gopher picture")
+		}
+		defer pic.Close()
+
+		gopher := io.Reader(pic)
+
+		_, error2 := s.ChannelFileSend(m.ChannelID, "gopher", gopher)
+		if error2 != nil {
+			fmt.Println("Error io.Reading the gopher jpg")
+		}
+	}
+
+	if m.Content == "!gopher NASA POD" {
+		response, err := http.Get("https://api.nasa.gov/planetary/apod?api_key=e4G3LccD485rgffH5rsvxBjX0bPG2HrH60l0jRXg")
+		if err != nil {
+			s.ChannelMessageSend(m.ChannelID, "Gopher couldn't get the picture for you!")
+			fmt.Println(err)
+		}
+
+		data, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("http.Get -> %v", err)
+		}
+
+		//unmarshall NASA get request data to receive "URL" parameter
+		// go to URL and read bytes
+		ioutil.WriteFile("Planetary_photo.jpg", data, 0666)
+
+		defer response.Body.Close()
+
+		if response.StatusCode == 200 {
+			_, err = s.ChannelFileSend(m.ChannelID, "Planetary_photo.jpg", response.Body)
+			if err != nil {
+				fmt.Println(err)
+			}
+		} else {
+			fmt.Println("Error: Can't get nasa photo")
 		}
 	}
 }

@@ -21,15 +21,12 @@ var (
 
 const goAPIURL = "https://kutego-api-xxxxx-ew.a.run.app"
 
-// func init() {
-// 	flag.StringVar(&Token, "t", "", "Bot Token")
-// 	flag.Parse()
-// }
-
 func main() {
 
+	key := os.Getenv("apikey")
+
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + "")
+	dg, err := discordgo.New("Bot " + key)
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
 		return
@@ -54,7 +51,7 @@ func main() {
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
-	// Cleanly close down the Discord session.
+	// Close the Discord session.
 	dg.Close()
 }
 
@@ -166,14 +163,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		gopher := io.Reader(pic)
 
-		_, error2 := s.ChannelFileSend(m.ChannelID, "gopher", gopher)
-		if error2 != nil {
+		_, err = s.ChannelFileSend(m.ChannelID, "gopher.jpg", gopher)
+		if err != nil {
 			fmt.Println("Error io.Reading the gopher jpg")
 		}
 	}
 
 	if m.Content == "!gopher NASA POD" {
-		response, err := http.Get("https://api.nasa.gov/planetary/apod?api_key=e4G3LccD485rgffH5rsvxBjX0bPG2HrH60l0jRXg")
+		response, err := http.Get("https://api.nasa.gov/planetary/apod?api_key=" + nasakey)
 		if err != nil {
 			s.ChannelMessageSend(m.ChannelID, "Gopher couldn't get the picture for you!")
 			fmt.Println(err)

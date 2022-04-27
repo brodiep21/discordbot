@@ -56,7 +56,7 @@ func NasaResponse(s *discordgo.Session, m *discordgo.MessageCreate) {
 		fmt.Printf("Could not unmarshal %v", err)
 	}
 
-	download.CreateFilePhoto(n.URL, "NasaPod.jpg")
+	CreateFilePhoto(n.URL, "NasaPod.jpg")
 
 	defer response.Body.Close()
 

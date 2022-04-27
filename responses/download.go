@@ -15,14 +15,9 @@ func CreateFilePhoto(URL, filename string) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println(URL)
 
 	defer resp.Body.Close()
-
-	// read the response body
-	_, err = io.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
 
 	//create a file based on provided name
 	newfile, err := os.Create(filename)

@@ -61,10 +61,15 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	switch m.Content {
-	case "!speak gopher":
+	case "What can you do gopher?", "what can you do gopher?", "what can you do gopher":
+		responses.ThingsIcanDo(s, m)
+	case "speak gopher", "Speak Gopher":
 		responses.SpeakResponse(s, m)
-	case "!gopher NASA POD":
+	case "gopher NASA POD", "Gopher NASA POD":
 		responses.NasaResponse(s, m)
+	case "Hi gopher", "Hi Gopher":
+		responses.HiGopher(s, m)
+	case "gopher", "Gopher":
 	}
 
 }

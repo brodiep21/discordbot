@@ -75,3 +75,25 @@ func NasaResponse(s *discordgo.Session, m *discordgo.MessageCreate) {
 		fmt.Println("Error: Can't get nasa photo")
 	}
 }
+
+func HiGopher(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	_, err := s.ChannelMessageSend(m.ChannelID, "Hi "+m.Author.Username)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func ThingsIcanDo(s *discordgo.Session, m *discordgo.MessageCreate) {
+
+	_, err := s.ChannelMessageSend(m.ChannelID, "Well "+m.Author.Username+" let me give you the lowdown.")
+	if err != nil {
+		fmt.Println(err)
+	}
+	_, err = s.ChannelMessageSend(m.ChannelID, `I can do a bunch of things. I'm currently able to:
+---------------------------------------------------------------
+1.) Send you nasa's picture of the day! Just say - "gopher NASA POD"`)
+	if err != nil {
+		fmt.Println(err)
+	}
+}

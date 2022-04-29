@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -90,9 +92,53 @@ func ThingsIcanDo(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	_, err = s.ChannelMessageSend(m.ChannelID, `I can do a bunch of things. I'm currently able to:
+	_, err = s.ChannelMessageSend(m.ChannelID, `So far, I can't do a ton, but I'm working on it!. I'm currently able to:
 ---------------------------------------------------------------
-1.) Send you nasa's picture of the day! Just say - "gopher NASA POD"`)
+1.) Send you nasa's picture of the day! Just say - "gopher NASA POD"
+2.) Tell you the weather of a city in the U.S!  Just say - "what's the weather like in <insert city>"`)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func Weather(city string, s *discordgo.Session, m *discordgo.MessageCreate) {
+	type Main struct {
+		Temp float64 `json:"temp"`
+		High float64 `json:"temp_max"`
+		Low  float64 `json:"temp_min"`
+	}
+
+	type Weatherinfo struct {
+		Main Main
+	}
+
+	var w Weatherinfo
+
+	weatherapi := os.Getenv("weatherapi")
+
+	weatherinputstring := "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + weatherapi + "&units=imperial"
+
+	client := &http.Client{Timeout: 3 * time.Second}
+
+	req, err := client.Get(weatherinputstring)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	defer req.Body.Close()
+
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+	json.Unmarshal(body, &w)
+
+	//alter json temps from float to string
+	temp := strconv.Itoa(int(w.Main.Temp))
+	h := strconv.Itoa(int(w.Main.High))
+	l := strconv.Itoa(int(w.Main.Low))
+
+	_, err = s.ChannelMessageSend(m.ChannelID, "It is currently "+temp+" with a high of "+h+", and a low of "+l)
 	if err != nil {
 		fmt.Println(err)
 	}

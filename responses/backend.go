@@ -34,7 +34,3 @@ func CreateFilePhoto(URL, filename string) {
 	}
 
 }
-
-// func DownloadFile() {
-
-// }

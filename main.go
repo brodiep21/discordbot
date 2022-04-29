@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/brodiep21/discordbot/responses"
@@ -54,10 +55,20 @@ func main() {
 // message is created on any channel that the authenticated bot has access to.
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
+	search := strings.Contains(m.Content, "weather")
+
 	// Ignore all messages created by the bot itself
 	// This isn't required in this specific example but it's a good practice.
+
 	if m.Author.ID == s.State.User.ID {
 		return
+	}
+
+	if search {
+		//remove the string to only find the city
+		city := strings.TrimLeft(m.Content, "whats the weather like in '")
+		responses.Weather(city, s, m)
+
 	}
 
 	switch m.Content {
@@ -67,9 +78,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		responses.SpeakResponse(s, m)
 	case "gopher NASA POD", "Gopher NASA POD":
 		responses.NasaResponse(s, m)
-	case "Hi gopher", "Hi Gopher":
+	case "Hi gopher", "Hi Gopher", "hi gopher":
 		responses.HiGopher(s, m)
-	case "gopher", "Gopher":
+		// case "gopher", "Gopher":
+		// case :
 	}
 
 }

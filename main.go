@@ -9,6 +9,7 @@ import (
 
 	"github.com/brodiep21/discordbot/responses"
 	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
 )
 
 // Variables used for command line parameters
@@ -17,7 +18,7 @@ var (
 )
 
 func main() {
-
+	err := godotenv.Load(".env")
 	key := os.Getenv("apikey")
 
 	// Create a new Discord session using the provided bot token.
@@ -55,14 +56,14 @@ func main() {
 // message is created on any channel that the authenticated bot has access to.
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-	search := strings.Contains(m.Content, "weather")
-
 	// Ignore all messages created by the bot itself
 	// This isn't required in this specific example but it's a good practice.
 
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
+
+	search := strings.Contains(m.Content, "weather")
 
 	if search {
 		//remove the string to only find the city
@@ -76,7 +77,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		responses.ThingsIcanDo(s, m)
 	case "speak gopher", "Speak Gopher":
 		responses.SpeakResponse(s, m)
-	case "gopher NASA POD", "Gopher NASA POD":
+	case "gopher NASA POD", "Gopher NASA POD", "gopher nasa pod":
 		responses.NasaResponse(s, m)
 	case "Hi gopher", "Hi Gopher", "hi gopher":
 		responses.HiGopher(s, m)

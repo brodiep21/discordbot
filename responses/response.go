@@ -77,7 +77,6 @@ func NasaResponse(s *discordgo.Session, m *discordgo.MessageCreate) {
 		fmt.Println("Error: Can't get nasa photo")
 	}
 }
-
 func HiGopher(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	_, err := s.ChannelMessageSend(m.ChannelID, "Hi "+m.Author.Username)
@@ -102,15 +101,6 @@ func ThingsIcanDo(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func Weather(city string, s *discordgo.Session, m *discordgo.MessageCreate) {
-	type Main struct {
-		Temp float64 `json:"temp"`
-		High float64 `json:"temp_max"`
-		Low  float64 `json:"temp_min"`
-	}
-
-	type Weatherinfo struct {
-		Main Main
-	}
 
 	var w Weatherinfo
 

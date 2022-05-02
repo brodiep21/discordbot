@@ -34,3 +34,34 @@ func CreateFilePhoto(URL, filename string) {
 	}
 
 }
+
+//creates a response to what they rolled if it's a DND die, just for fun!
+func Quirkresponse(ddice int, style string) string {
+	var response string
+	if style == "DnD" {
+		switch ddice {
+		case 20:
+			response = "Perfect roll, critical hit!"
+			return response
+		case 19, 18, 17, 16, 15, 14, 13, 12, 11, 10:
+			response = "great roll!"
+			return response
+		case 9, 8, 7, 6:
+			response = "not bad!"
+			return response
+		case 5, 4, 3, 2:
+			response = "could still be worse."
+			return response
+		case 1:
+			response = "oof. Better luck next time!"
+			return response
+			// default:
+			// 	response = ""
+			// 	return response
+		}
+	} else if style == "regular" {
+		response = ""
+		return response
+	}
+	return response
+}

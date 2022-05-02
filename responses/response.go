@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"os"
 	"strconv"
@@ -15,7 +16,7 @@ import (
 )
 
 func SpeakResponse(s *discordgo.Session, m *discordgo.MessageCreate) {
-	_, err := s.ChannelMessageSend(m.ChannelID, "Gopher reporting for duty!")
+	_, err := s.ChannelMessageSend(m.ChannelID, `Gopher reporting for duty! Type "gopher help" if you'd like more information`)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -91,7 +92,9 @@ func ThingsIcanDo(s *discordgo.Session, m *discordgo.MessageCreate) {
 	_, err = s.ChannelMessageSend(m.ChannelID, `So far, I can't do a ton, but I'm working on it!. I'm currently able to:
 ---------------------------------------------------------------
 1.) Send you nasa's picture of the day! Just say - "gopher NASA POD"
-2.) Tell you the weather of a city in the U.S!  Just say - "what's the weather like in <insert city>"`)
+2.) Tell you the weather of a city in the U.S!  Just say - "what's the weather like in <insert city>"
+3.) I can search google for you and provide the top 3 results! Just say - "gopher google search", I will respond that I'm listening and you can then type in what you want to search!
+4.)I can roll a regular die, or a DnD die. Just say - "roll the die gopher" or "die roll", I will ask which one you want to roll. I can also roll 2 regular dice for you. Just say - "roll the dice"`)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -138,8 +141,9 @@ func GoogleSearch(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
+	//this is a secondary listener to look for the follow up response to the google search func initiation.
 	newlistener := func(s *discordgo.Session, m *discordgo.MessageCreate) {
+		//verify the author we are now listening to for the google search is the one who initiated the search.
 		if m.Author.Username == listenTo {
 			google, err := googlesearch.Search(context.TODO(), m.Content)
 			if err != nil {
@@ -149,6 +153,7 @@ func GoogleSearch(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if err != nil {
 				fmt.Println(err)
 			}
+			//range over the google search and only find the first 3 search results. (We can limit or add to search results up to 100 results per search)
 			for _, v := range google {
 				if v.Rank < 4 {
 					_, err = s.ChannelMessageSend(m.ChannelID, strconv.Itoa(v.Rank)+"\n"+v.URL)
@@ -157,11 +162,57 @@ func GoogleSearch(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			}
-			// fmt.Println(google)
-
 		}
 	}
 
+	s.Open()
+	s.AddHandlerOnce(newlistener)
+}
+
+func DiceRoll(s *discordgo.Session, m *discordgo.MessageCreate) {
+	listenTo := m.Author.Username
+	if m.Content == "roll the dice" {
+		ddice := rand.Intn(6)
+		ddice2 := rand.Intn(6)
+
+		if ddice == 0 {
+			ddice = 1
+		}
+		if ddice2 == 0 {
+			ddice2 = 1
+		}
+		_, err := s.ChannelMessageSend(m.ChannelID, "You rolled a "+strconv.Itoa(ddice)+", and a "+strconv.Itoa(ddice2))
+		if err != nil {
+			fmt.Println(err)
+		}
+		return
+	}
+	_, err := s.ChannelMessageSend(m.ChannelID, "What type of Dice? Regular or DnD?")
+	if err != nil {
+		fmt.Println("Couldn't roll the dice", err)
+	}
+
+	//this is a secondary listener to look for the follow up response to the dice request func initiation if they aren't calling for two dice.
+	newlistener := func(s *discordgo.Session, m *discordgo.MessageCreate) {
+		if m.Author.Username == listenTo {
+			if m.Content == "dnd" || m.Content == "DnD" || m.Content == "DND" {
+				ddice := rand.Intn(20)
+				if ddice == 0 {
+					ddice = 1
+				}
+				_, err = s.ChannelMessageSend(m.ChannelID, "You rolled a "+strconv.Itoa(ddice)+", "+Quirkresponse(ddice, "DnD"))
+				if err != nil {
+					fmt.Println(err)
+				}
+			} else if m.Content == "Regular" || m.Content == "regular" {
+				ddice := rand.Intn(6)
+				_, err = s.ChannelMessageSend(m.ChannelID, "You rolled a "+strconv.Itoa(ddice)+Quirkresponse(ddice, "regular"))
+				if err != nil {
+					fmt.Println(err)
+				}
+			}
+		}
+	}
 	s.Open()
 	s.AddHandlerOnce(newlistener)
 }

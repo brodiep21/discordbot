@@ -28,7 +28,7 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	switch m.Content {
-	case "What can you do gopher?", "what can you do gopher?", "what can you do gopher":
+	case "What can you do gopher?", "what can you do gopher?", "what can you do gopher", "gopher help":
 		ThingsIcanDo(s, m)
 	case "speak gopher", "Speak Gopher":
 		SpeakResponse(s, m)
@@ -36,8 +36,10 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		NasaResponse(s, m)
 	case "Hi gopher", "Hi Gopher", "hi gopher":
 		HiGopher(s, m)
-	case "gopher google search":
+	case "gopher google search", "Gopher Google Search", "gopher Google Search", "gopher Google search":
 		GoogleSearch(s, m)
+	case "roll the die gopher", "die roll", "roll the dice":
+		DiceRoll(s, m)
 	}
 
 }

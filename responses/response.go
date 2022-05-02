@@ -1,6 +1,7 @@
 package responses
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,12 +11,8 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	googlesearch "github.com/rocketlaunchr/google-search"
 )
-
-type Nasa struct {
-	URL         string `json:"hdurl"`
-	Explanation string `json:"explanation"`
-}
 
 func SpeakResponse(s *discordgo.Session, m *discordgo.MessageCreate) {
 	_, err := s.ChannelMessageSend(m.ChannelID, "Gopher reporting for duty!")
@@ -132,4 +129,40 @@ func Weather(city string, s *discordgo.Session, m *discordgo.MessageCreate) {
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+//responses to the Person requesting to search google
+func GoogleSearch(s *discordgo.Session, m *discordgo.MessageCreate) {
+	listenTo := m.Author.Username
+	_, err := s.ChannelMessageSend(m.ChannelID, "Type what you'd like me to search "+m.Author.Username)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	newlistener := func(s *discordgo.Session, m *discordgo.MessageCreate) {
+		if m.Author.Username == listenTo {
+			google, err := googlesearch.Search(context.TODO(), m.Content)
+			if err != nil {
+				fmt.Println(err)
+			}
+			_, err = s.ChannelMessageSend(m.ChannelID, "Thanks for responding! Here's your top 3 search results!")
+			if err != nil {
+				fmt.Println(err)
+			}
+			for _, v := range google {
+				if v.Rank < 4 {
+					_, err = s.ChannelMessageSend(m.ChannelID, strconv.Itoa(v.Rank)+"\n"+v.URL)
+					if err != nil {
+						fmt.Println(err)
+					}
+				}
+			}
+			// fmt.Println(google)
+
+		}
+		s.Close()
+	}
+
+	s.Open()
+	s.AddHandlerOnce(newlistener)
 }

@@ -15,7 +15,6 @@ func CreateFilePhoto(URL, filename string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(URL)
 
 	defer resp.Body.Close()
 
@@ -55,9 +54,6 @@ func Quirkresponse(ddice int, style string) string {
 		case 1:
 			response = "oof. Better luck next time!"
 			return response
-			// default:
-			// 	response = ""
-			// 	return response
 		}
 	} else if style == "regular" {
 		response = ""

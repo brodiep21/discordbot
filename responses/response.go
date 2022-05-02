@@ -160,7 +160,6 @@ func GoogleSearch(s *discordgo.Session, m *discordgo.MessageCreate) {
 			// fmt.Println(google)
 
 		}
-		s.Close()
 	}
 
 	s.Open()

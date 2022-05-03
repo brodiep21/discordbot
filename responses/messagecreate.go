@@ -11,8 +11,6 @@ import (
 func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Ignore all messages created by the bot itself
-	// This isn't required in this specific example but it's a good practice.
-
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
@@ -40,7 +38,8 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		GoogleSearch(s, m)
 	case "roll the die gopher", "die roll", "roll the dice":
 		DiceRoll(s, m)
-
+	case "dad joke", "gopher dad joke", "tell me a dad joke":
+		DadJoke(s, m)
 	}
 
 }

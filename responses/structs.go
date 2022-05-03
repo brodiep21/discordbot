@@ -13,3 +13,8 @@ type Main struct {
 type Weatherinfo struct {
 	Main Main
 }
+
+type Joke struct {
+	Joke   string `json:"joke"`
+	Status int    `json:"status"`
+}

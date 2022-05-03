@@ -216,3 +216,33 @@ func DiceRoll(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.Open()
 	s.AddHandlerOnce(newlistener)
 }
+
+func DadJoke(s *discordgo.Session, m *discordgo.MessageCreate) {
+	var d Joke
+	client := &http.Client{Timeout: 3 * time.Second}
+
+	req, err := client.Get("https://icanhazdadjoke.com/")
+	if err != nil {
+		fmt.Println(err)
+	}
+	req.Header = http.Header{
+		"Accept":     []string{"application/json"},
+		"User-Agent": []string{"discordbotGopher (https://github.com/brodiep21/discordbot)"},
+	}
+
+	defer req.Body.Close()
+
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(string(body))
+	json.Unmarshal(body, &d)
+
+	_, err = s.ChannelMessageSend(m.ChannelID, `Icanhazdadjoke.com joke!
+`+d.Joke)
+	if err != nil {
+		fmt.Println(err)
+	}
+}

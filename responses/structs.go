@@ -15,6 +15,5 @@ type Weatherinfo struct {
 }
 
 type Joke struct {
-	Joke   string `json:"joke"`
-	Status int    `json:"status"`
+	Joke string `json:"joke"`
 }

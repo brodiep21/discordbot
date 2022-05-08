@@ -94,7 +94,9 @@ func ThingsIcanDo(s *discordgo.Session, m *discordgo.MessageCreate) {
 1.) Send you nasa's picture of the day! Just say - "gopher NASA POD"
 2.) Tell you the weather of a city in the U.S!  Just say - "what's the weather like in <insert city>"
 3.) I can search google for you and provide the top 3 results! Just say - "gopher google search", I will respond that I'm listening and you can then type in what you want to search!
-4.)I can roll a regular die, or a DnD die. Just say - "roll the die gopher" or "die roll", I will ask which one you want to roll. I can also roll 2 regular dice for you. Just say - "roll the dice"`)
+4.)I can roll a regular die, or a DnD die. Just say - "roll the die gopher" or "die roll", I will ask which one you want to roll. I can also roll 2 regular dice for you. Just say - "roll the dice"
+5.)I can give you a random joke.  Just say - "joke", "gopher joke", "tell me a joke"
+6.)I can give you an Andy Dwyer gif. Just say - "andy", or "surprised andy"`)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -217,17 +219,17 @@ func DiceRoll(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.AddHandlerOnce(newlistener)
 }
 
-func DadJoke(s *discordgo.Session, m *discordgo.MessageCreate) {
+func Jokes(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var d Joke
 	client := &http.Client{Timeout: 3 * time.Second}
 
-	req, err := client.Get("https://icanhazdadjoke.com/")
+	req, err := client.Get("https://v2.jokeapi.dev/joke/Any?type=single")
 	if err != nil {
 		fmt.Println(err)
 	}
 	req.Header = http.Header{
 		"Accept":     []string{"application/json"},
-		"User-Agent": []string{"discordbotGopher (https://github.com/brodiep21/discordbot)"},
+		"User-Agent": []string{"discordbotGopher"},
 	}
 
 	defer req.Body.Close()
@@ -237,12 +239,26 @@ func DadJoke(s *discordgo.Session, m *discordgo.MessageCreate) {
 		fmt.Println(err)
 	}
 
-	fmt.Println(string(body))
 	json.Unmarshal(body, &d)
 
-	_, err = s.ChannelMessageSend(m.ChannelID, `Icanhazdadjoke.com joke!
+	if req.StatusCode == 200 {
+		_, err = s.ChannelMessageSend(m.ChannelID, `Rando joke!
 `+d.Joke)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+}
+
+func Andy(s *discordgo.Session, m *discordgo.MessageCreate) {
+	pic, err := os.Open("surprised-andy.gif")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Cannot open andy gif")
+	}
+	defer pic.Close()
+
+	_, err = s.ChannelFileSend(m.ChannelID, "surprised-andy.gif", io.Reader(pic))
+	if err != nil {
+		fmt.Println("Error io.Reading the gopher jpg")
 	}
 }

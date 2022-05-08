@@ -61,3 +61,7 @@ func Quirkresponse(ddice int, style string) string {
 	}
 	return response
 }
+
+// func Scraper (link string) {
+
+// }

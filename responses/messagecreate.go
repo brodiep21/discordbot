@@ -38,8 +38,10 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		GoogleSearch(s, m)
 	case "roll the die gopher", "die roll", "roll the dice":
 		DiceRoll(s, m)
-	case "dad joke", "gopher dad joke", "tell me a dad joke":
-		DadJoke(s, m)
+	case "joke", "gopher joke", "tell me a joke":
+		Jokes(s, m)
+	case "andy", "surprised andy":
+		Andy(s, m)
 	}
 
 }

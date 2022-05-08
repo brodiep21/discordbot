@@ -17,7 +17,12 @@ var (
 )
 
 func main() {
-	err := godotenv.Load(".env")
+	//automatically load ".env files"
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("problem loading .env file")
+	}
+
 	key := os.Getenv("apikey")
 
 	// Create a new Discord session using the provided bot token.

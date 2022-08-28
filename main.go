@@ -8,7 +8,6 @@ import (
 
 	"github.com/brodiep21/discordbot/responses"
 	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
 )
 
 // Variables used for command line parameters
@@ -18,10 +17,10 @@ var (
 
 func main() {
 	//automatically load ".env files"
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("problem loading .env file")
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	fmt.Println("problem loading .env file")
+	// }
 
 	key := os.Getenv("apikey")
 
@@ -31,7 +30,7 @@ func main() {
 		fmt.Println("error creating Discord session,", err)
 		return
 	}
-
+	dg.MessageCreate(responses.SignOnFunc)
 	// Register the messageCreate func as a callback for MessageCreate events.
 	dg.AddHandler(responses.MessageCreate)
 

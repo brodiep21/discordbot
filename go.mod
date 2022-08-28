@@ -2,7 +2,10 @@ module github.com/brodiep21/discordbot
 
 go 1.17
 
-require github.com/bwmarrin/discordgo v0.25.0
+require (
+	github.com/bwmarrin/discordgo v0.25.0
+	github.com/rocketlaunchr/google-search v1.1.4
+)
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
@@ -14,9 +17,7 @@ require (
 	github.com/gocolly/colly/v2 v2.0.1 // indirect
 	github.com/golang/protobuf v1.3.1 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
-	github.com/rocketlaunchr/google-search v1.1.4 // indirect
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/temoto/robotstxt v1.1.1 // indirect
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect

@@ -136,8 +136,8 @@ func Weather(city string, s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
-//responses to the Person requesting to search google
-func GoogleSearch(s *discordgo.Session, m *discordgo.MessageCreate) {
+// responses to the Person requesting to search google
+func GoogleSearch(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	listenTo := m.Author.Username
 	_, err := s.ChannelMessageSend(m.ChannelID, "Type what you'd like me to search "+m.Author.Username)
 	if err != nil {
@@ -149,11 +149,15 @@ func GoogleSearch(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Username == listenTo {
 			google, err := googlesearch.Search(context.TODO(), m.Content)
 			if err != nil {
+				_, err = s.ChannelMessageSend(m.ChannelID, "I'm sorry, I couldn't search google because I encountered an error ")
 				fmt.Println(err)
 			}
 			_, err = s.ChannelMessageSend(m.ChannelID, "Thanks for responding! Here's your top 3 search results!")
 			if err != nil {
-				fmt.Println(err)
+				_, err = s.ChannelMessageSend(m.ChannelID, "I'm sorry, I couldn't return your google results because of an error: ")
+				if err != nil {
+					fmt.Println(err)
+				}
 			}
 			//range over the google search and only find the first 3 search results. (We can limit or add to search results up to 100 results per search)
 			for _, v := range google {
@@ -169,6 +173,7 @@ func GoogleSearch(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	s.Open()
 	s.AddHandlerOnce(newlistener)
+	return nil
 }
 
 func DiceRoll(s *discordgo.Session, m *discordgo.MessageCreate) {

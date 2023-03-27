@@ -24,6 +24,7 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Weather(city, s, m)
 
 	}
+
 	content := strings.ToLower(m.Content)
 	switch content {
 	case "what can you do gopher?", "gopher help":
@@ -42,6 +43,8 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Jokes(s, m)
 	case "andy", "surprised andy":
 		Andy(s, m)
+		// case "!chatgpt":
+		// 	ChatGpt.ChatGpt(s, m)
 	}
 
 }

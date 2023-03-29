@@ -1,4 +1,4 @@
-package responses
+package internal
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-//Gets an image provided from the URL, then creates a filename and saves the image to it.
+// Gets an image provided from the URL, creates a file and write the data into provided name.
 func CreateFilePhoto(URL, filename string) {
 
 	//GET CALL URL
@@ -34,7 +34,7 @@ func CreateFilePhoto(URL, filename string) {
 
 }
 
-//creates a response to what they rolled if it's a DND die, just for fun!
+// creates a response to what they rolled if it's a DND die, just for fun!
 func Quirkresponse(ddice int, style string) string {
 	var response string
 	if style == "DnD" {
@@ -62,6 +62,7 @@ func Quirkresponse(ddice int, style string) string {
 	return response
 }
 
+//implement scraper?
 // func Scraper (link string) {
 
 // }

@@ -11,10 +11,13 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/brodiep21/discordbot/internal"
 	"github.com/bwmarrin/discordgo"
 	googlesearch "github.com/rocketlaunchr/google-search"
 )
 
+// TODO:
+// 1.)break up this code into smaller files
 func SpeakResponse(s *discordgo.Session, m *discordgo.MessageCreate) {
 	_, err := s.ChannelMessageSend(m.ChannelID, `Gopher reporting for duty! Type "gopher help" if you'd like more information`)
 	if err != nil {
@@ -56,7 +59,7 @@ func NasaResponse(s *discordgo.Session, m *discordgo.MessageCreate) {
 		fmt.Printf("Could not unmarshal %v", err)
 	}
 
-	CreateFilePhoto(n.URL, "NasaPod.jpg")
+	internal.CreateFilePhoto(n.URL, "NasaPod.jpg")
 
 	defer response.Body.Close()
 
@@ -106,7 +109,7 @@ func Weather(city string, s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	var w Weatherinfo
 
-	weatherapi := os.Getenv("weatherapi")
+	weatherapi := os.Getenv("weatherkey")
 
 	weatherinputstring := "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + weatherapi + "&units=imperial"
 
@@ -208,13 +211,13 @@ func DiceRoll(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if ddice == 0 {
 					ddice = 1
 				}
-				_, err = s.ChannelMessageSend(m.ChannelID, "You rolled a "+strconv.Itoa(ddice)+", "+Quirkresponse(ddice, "DnD"))
+				_, err = s.ChannelMessageSend(m.ChannelID, "You rolled a "+strconv.Itoa(ddice)+", "+internal.Quirkresponse(ddice, "DnD"))
 				if err != nil {
 					fmt.Println(err)
 				}
 			} else if m.Content == "Regular" || m.Content == "regular" {
 				ddice := rand.Intn(6)
-				_, err = s.ChannelMessageSend(m.ChannelID, "You rolled a "+strconv.Itoa(ddice)+Quirkresponse(ddice, "regular"))
+				_, err = s.ChannelMessageSend(m.ChannelID, "You rolled a "+strconv.Itoa(ddice)+internal.Quirkresponse(ddice, "regular"))
 				if err != nil {
 					fmt.Println(err)
 				}

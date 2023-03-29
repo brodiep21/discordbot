@@ -13,7 +13,7 @@ import (
 )
 
 // get env key for chatGPT
-var key = os.Getenv("key")
+var key = os.Getenv("gptkey")
 
 func ChatGptMessage(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	listenTo := m.Author.Username

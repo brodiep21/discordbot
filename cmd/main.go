@@ -17,7 +17,7 @@ var (
 
 func main() {
 
-	key := os.Getenv("apikey")
+	key := os.Getenv("botkey")
 
 	// Create a new Discord session using the provided bot token.
 	dg, err := discordgo.New("Bot " + key)

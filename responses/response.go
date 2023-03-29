@@ -143,6 +143,7 @@ func GoogleSearch(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	//this is a secondary listener to look for the follow up response to the google search func initiation.
 	newlistener := func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		//verify the author we are now listening to for the google search is the one who initiated the search.

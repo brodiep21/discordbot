@@ -30,7 +30,7 @@ func main() {
 		fmt.Println("error creating Discord session,", err)
 		return
 	}
-	// dg.AddHandler(responses.SignOnFunc())
+	responses.SignOnFunc()
 	// Register the messageCreate func as a callback for MessageCreate events.
 	dg.AddHandler(responses.MessageCreate)
 

@@ -1,8 +1,9 @@
-package responses
+package messages
 
 import (
 	"strings"
 
+	"github.com/brodiep21/discordbot/responses"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -21,30 +22,30 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		//remove the string to only find the city
 		city := strings.TrimLeft(m.Content, "whats the weather like in '")
 
-		Weather(city, s, m)
+		responses.Weather(city, s, m)
 
 	}
 
 	content := strings.ToLower(m.Content)
 	switch content {
-	case "what can you do gopher?", "gopher help":
-		ThingsIcanDo(s, m)
+	case "what can you do gopher?", "gopher help", "what can you do gopher":
+		responses.ThingsIcanDo(s, m)
 	case "speak gopher":
-		SpeakResponse(s, m)
+		responses.SpeakResponse(s, m)
 	case "gopher nasa pod":
-		NasaResponse(s, m)
+		responses.NasaResponse(s, m)
 	case "hi gopher":
-		HiGopher(s, m)
+		responses.HiGopher(s, m)
 	case "gopher google search":
-		GoogleSearch(s, m)
+		responses.GoogleSearch(s, m)
 	case "roll the die gopher", "die roll", "roll the dice":
-		DiceRoll(s, m)
+		responses.DiceRoll(s, m)
 	case "joke", "gopher joke", "tell me a joke":
-		Jokes(s, m)
+		responses.Jokes(s, m)
 	case "andy", "surprised andy":
-		Andy(s, m)
-		// case "!chatgpt":
-		// 	ChatGpt.ChatGpt(s, m)
+		responses.Andy(s, m)
+	case "!chatgpt":
+		responses.ChatGptMessage(s, m)
 	}
 
 }

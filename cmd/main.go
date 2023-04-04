@@ -12,8 +12,14 @@ import (
 
 // Variables used for command line parameters
 var (
-	Token string
+	Token  string
 )
+
+// Discord bot api key
+BotKey = os.Getenv("botkey")
+
+// get env key for chatGPT
+GptKey = os.Getenv("gptkey")
 
 func main() {
 

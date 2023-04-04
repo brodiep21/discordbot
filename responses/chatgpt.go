@@ -7,13 +7,9 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"os"
 
 	"github.com/bwmarrin/discordgo"
 )
-
-// get env key for chatGPT
-var key = os.Getenv("gptkey")
 
 func ChatGptMessage(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	listenTo := m.Author.Username
@@ -25,7 +21,7 @@ func ChatGptMessage(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	newlistener := func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		//verify the author we are now listening to for the google search is the one who initiated the search.
 		if m.Author.Username == listenTo {
-			msg, err := RequestToChatGpt(m.Content)
+			msg, err := RequestToChatGpt(m.Content, GptKey)
 			if err != nil {
 				return
 			}
@@ -42,7 +38,7 @@ func ChatGptMessage(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	s.AddHandlerOnce(newlistener)
 	return nil
 }
-func RequestToChatGpt(m string) (string, error) {
+func RequestToChatGpt(m, apiKey string) (string, error) {
 
 	endmsg := "tell Brodie to fix it"
 	req, err := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", nil)
